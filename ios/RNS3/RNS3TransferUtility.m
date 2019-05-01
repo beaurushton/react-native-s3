@@ -197,7 +197,6 @@ RCT_EXPORT_METHOD(enableProgressSent: (BOOL)enabled resolver:(RCTPromiseResolveB
         // @"key":[task key],
         @"state":state,
         @"bytes":@(bytes),
-        @"test":@(bytes),
         @"totalBytes":@(totalBytes)
       },
       @"type":type,
