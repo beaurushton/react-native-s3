@@ -174,9 +174,20 @@ RCT_EXPORT_METHOD(enableProgressSent: (BOOL)enabled resolver:(RCTPromiseResolveB
     };
   }
 
-  if ([state isEqual: @"in_progress"] && !enabledProgress) {
-    return;
+  static NSDate *(startDate);
+  if ([state isEqual: @"in_progress"])
+  {
+    if (!enabledProgress) return;
+    if (startDate) {
+      // Throttle progress event
+      double timePassed_ms = [startDate timeIntervalSinceNow] * -1000.0;
+      if (timePassed_ms < 500) {
+        return;
+      }
+    }
+    startDate = [NSDate date];
   }
+
   [self.bridge.eventDispatcher
     sendAppEventWithName:@"@_RNS3_Events"
     body:@{
@@ -186,6 +197,7 @@ RCT_EXPORT_METHOD(enableProgressSent: (BOOL)enabled resolver:(RCTPromiseResolveB
         // @"key":[task key],
         @"state":state,
         @"bytes":@(bytes),
+        @"test":@(bytes),
         @"totalBytes":@(totalBytes)
       },
       @"type":type,
