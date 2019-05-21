@@ -181,7 +181,7 @@ RCT_EXPORT_METHOD(enableProgressSent: (BOOL)enabled resolver:(RCTPromiseResolveB
     if (startDate) {
       // Throttle progress event
       double timePassed_ms = [startDate timeIntervalSinceNow] * -1000.0;
-      if (timePassed_ms < 500) {
+      if (timePassed_ms < 200) {
         return;
       }
     }

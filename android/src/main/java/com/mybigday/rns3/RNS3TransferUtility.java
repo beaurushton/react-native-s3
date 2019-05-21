@@ -44,6 +44,7 @@ public class RNS3TransferUtility extends ReactContextBaseJavaModule {
     nativeCredentialsOptions.put("cognito_region", "eu-west-1");
   }
 
+  private static long lastProgressEventMS = 0;
   private static boolean alreadyInitialize = false;
   private static boolean enabledProgress = true;
   private Context context;
@@ -66,6 +67,18 @@ public class RNS3TransferUtility extends ReactContextBaseJavaModule {
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
       .emit(eventName, params);
   }
+
+  private boolean canSendProgressEvent()
+  {
+    long currentTimeMillis = System.currentTimeMillis();
+    if(currentTimeMillis - lastProgressEventMS > 200)
+    {
+      lastProgressEventMS = System.currentTimeMillis();
+      return true;
+    }
+    return false;
+  }
+
 
   private WritableMap convertTransferObserver(TransferObserver task) {
     if (task == null) return null;
@@ -111,7 +124,9 @@ public class RNS3TransferUtility extends ReactContextBaseJavaModule {
           taskMap.putDouble("bytes", bytesCurrent);
         }
         result.putMap("task", taskMap);
-        sendEvent("@_RNS3_Events", result);
+        if(canSendProgressEvent()) {
+          sendEvent("@_RNS3_Events", result);
+        }
       }
 
       @Override
