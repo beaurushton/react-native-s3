@@ -119,6 +119,12 @@ You can use [rnpm](https://github.com/rnpm/rnpm) instead of above steps.
   android:enabled="true" />
 ```
 
+* Add this inside the `<application>` tag:
+(it is required if your app targets API Level 28 (Android 9.0) or above)
+```xml
+<uses-library android:name="org.apache.http.legacy" android:required="false" />
+```
+
 * __*[Optional]*__ you can set the credentials in `MainActivity.java`:
 
 ```java
